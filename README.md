@@ -2,10 +2,14 @@
 MQTT testing with mosquitto
 
 A configuration file is required in ~/mqtt/config
+```shell
 allow_anonymous true
 port 1883 
+```
 
 ## Run the server with:
+
+```shell
 docker run -it --rm -p 1883:1883 -v $HOME/mqtt/config:/mosquitto/config --ip 172.17.0.2 eclipse-mosquitto 
 1666781743: The 'port' option is now deprecated and will be removed in a future version. Please use 'listener' instead. 
 1666781743: mosquitto version 2.0.15 starting 1666781743: Config loaded from /mosquitto/config/mosquitto.conf. 
@@ -14,12 +18,18 @@ docker run -it --rm -p 1883:1883 -v $HOME/mqtt/config:/mosquitto/config --ip 172
 1666781743: mosquitto version 2.0.15 running 
 1666781757: New connection from 172.17.0.1:32814 on port 1883. 
 1666781757: Client <unknown> closed its connection. 
+```
 
 En otra ventana se comprueba que funciona 
+
+```shell
 ubuntu@ubuntu-2204:~/mqtt$ nc -zv 172.17.0.2 1883 Connection to 172.17.0.2 1883 port [tcp/*] succeeded! 
+```
 
+## Lanzamos un suscriptor
 
-## Lanzamos un suscriptor:
+En este caso usamos un contenedor con mqtt client. 
+
 docker run -it --rm efrecon/mqtt-client sub \
         -h 172.17.0.2 \
         -t "#" \
@@ -35,15 +45,25 @@ Y en el terminal del cliente suscrito aparece
 “test/testdevice [{"json":"validated","data":42},{"to":2,"test":"with"}]”
 
 En el terminal del servidor veremos:
+
+```shell
 1666781985: New connection from 172.17.0.3:56512 on port 1883.
 1666781985: New client connected from 172.17.0.3:56512 as auto-870A7ED8-9A87-EBD5-99B5-2B70F942767E (p2, c1, k60).
 1666782072: New connection from 172.17.0.4:43678 on port 1883.
 1666782072: New client connected from 172.17.0.4:43678 as auto-D0226ACE-0F62-1271-DD9F-9FE11AB37186 (p2, c1, k60).
 1666782072: Client auto-D0226ACE-0F62-1271-DD9F-9FE11AB37186 disconnected.
+```
 
-Líneas 1 y 2: conexión del oyente
-Líneas 3, 4 y 5: conexión del emisor, y desconexión inmediata
+1. Líneas 1 y 2: conexión del oyente
+2. Líneas 3, 4 y 5: conexión del emisor, y desconexión inmediata
 
+## Extras
 
+También se puede instalar en el host "sudo apt-get install mosquitto-clients", mosquitto clients. Su uso para publicar (enviar) es sencillo
 
+```shell
+mosquitto_pub -d -q 1 -h "localhost" -p "1883" -t "v1/devices/me/telemetry" -u "ABC123" -m {"temperature":25}
+```
+
+Donde "-h localhost" es la dirección o nombre del broker, "-p 1883" es su puerto, "-t xxx" es el tema, "-u xxx" es el usuario y "-m xxx" es el mensaje, en esta caso un texto JSON. El contenedor publicador de arriba tiene simplemente un alias de "mosquitto_pub" a "pub".  
 
