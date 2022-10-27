@@ -28,21 +28,30 @@ ubuntu@ubuntu-2204:~/mqtt$ nc -zv 172.17.0.2 1883 Connection to 172.17.0.2 1883 
 
 ## Lanzamos un suscriptor
 
-En este caso usamos un contenedor con mqtt client. 
+En este caso usamos un contenedor con un cliente MQTT que se suscribe a *todos* los temas. El terminal quedará bloqueado
 
+```shell
 docker run -it --rm efrecon/mqtt-client sub \
         -h 172.17.0.2 \
         -t "#" \
         -v
-## Lanzamos un cliente que emite un mensaje:
+```
+
+## Lanzamos en otro terminal un cliente que emite un mensaje
+
+```shell
 docker run -it --rm efrecon/mqtt-client pub \
         -h 172.17.0.2 \
         -p 1883 \
         -t "test/testdevice" \
         -m '[{"json":"validated","data":42},{"to":2,"test":"with"}]'
+```
 
 Y en el terminal del cliente suscrito aparece 
-“test/testdevice [{"json":"validated","data":42},{"to":2,"test":"with"}]”
+
+```shell
+test/testdevice [{"json":"validated","data":42},{"to":2,"test":"with"}]”
+```
 
 En el terminal del servidor veremos:
 
