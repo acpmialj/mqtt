@@ -1,14 +1,16 @@
 # mqtt
-MQTT testing with mosquitto
+Pruebas de MQTT con Mosquitto
 
-A configuration file is required in ~/mqtt/config
+En la carpeta "config" tenemos la configuración mínima para el broker. Esta carpeta estará disponible para el contenedor que ejecuta el broker. 
+
 ```shell
 allow_anonymous true
 port 1883 
 ```
 
-## Run the server with:
+## Ejecución
 
+En un terminal lanzamos un contenedor basado en la imagen eclipse-mosquitto, que implementa el broker MQTT. El terminal queda asociado al servidor. 
 ```shell
 docker run -it --rm -p 1883:1883 -v $HOME/mqtt/config:/mosquitto/config --ip 172.17.0.2 eclipse-mosquitto 
 1666781743: The 'port' option is now deprecated and will be removed in a future version. Please use 'listener' instead. 
@@ -20,10 +22,10 @@ docker run -it --rm -p 1883:1883 -v $HOME/mqtt/config:/mosquitto/config --ip 172
 1666781757: Client <unknown> closed its connection. 
 ```
 
-En otra ventana se comprueba que funciona 
+En otro terminal comprobamos (desde el host) que el servidor está operativo: 
 
 ```shell
-ubuntu@ubuntu-2204:~/mqtt$ nc -zv 172.17.0.2 1883 Connection to 172.17.0.2 1883 port [tcp/*] succeeded! 
+nc -zv 172.17.0.2 1883 Connection to 172.17.0.2 1883 port [tcp/*] succeeded! 
 ```
 
 ## Lanzamos un suscriptor
