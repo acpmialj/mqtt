@@ -2,6 +2,8 @@
 Pruebas de MQTT con Mosquitto
 
 ## Puesta en marcha del servidor
+Clonamos este repositorio y pasamos al directorio mqtt: "cd mqtt". 
+
 En la carpeta "config" tenemos la configuración mínima para el broker. Esta carpeta estará disponible para el contenedor que ejecuta el broker. 
 
 ```shell
