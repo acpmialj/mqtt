@@ -1,5 +1,5 @@
 # mqtt
-Pruebas de MQTT con Mosquitto
+Pruebas de MQTT con Mosquitto.
 
 ## Puesta en marcha del servidor
 Clonamos este repositorio y pasamos al directorio mqtt: "cd mqtt". 
