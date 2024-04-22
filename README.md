@@ -3,6 +3,10 @@ Pruebas de MQTT con Mosquitto. Necesitamos una red "mqttnet":
 ```
 docker network create mqttnet
 ```
+Usaremos varias imágenes Docker
+* Una que trae preinstalado un servidor mosquitto: eclipse-mosquitto
+* Otra que trae preinstalados un programa cliente-emisor MQTT (mosquitto_pub) y un programa cliente-suscriptor (mosquitto_pub): efrecon/mqtt-client
+* Otra de Alpine con Python preinstalado: python:alpine3.19
 
 ## Puesta en marcha del servidor
 Clonamos este repositorio y pasamos al directorio mqtt: "cd mqtt". 
@@ -24,13 +28,12 @@ docker run -it --rm --name mosquitto --network mqttnet -v ./config:/mosquitto/co
 1713799126: mosquitto version 2.0.18 running
 ```
 ## Lanzamos un suscriptor "universal"
-
 En este caso usamos un contenedor con un cliente MQTT que se suscribe a *todos* los temas. Se conectará al broker usando el nombre del contenedor servidor
 (mosquitto). No hace falta indicar el puerto, puesto que se usa el puerto por omisión (1883). El terminal quedará bloqueado, pero se irán volcando resultados 
 correspondientes a los mensajes recibidos. 
 
 ```shell
-docker run -it --rm --network mqttnet efrecon/mqtt-client mmosquitto_sub -h mosquitto -p 1883 -t "#" -v
+docker run -it --rm --network mqttnet efrecon/mqtt-client mosquitto_sub -h mosquitto -p 1883 -t "#" -v
 ```
 En la ventana del servidor, veremos "logs" de la nueva conexión:
 ```
